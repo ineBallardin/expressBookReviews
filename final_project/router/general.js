@@ -9,19 +9,23 @@ const doesExist = (username) => {
 }
 
 public_users.post("/register", (req, res) => {
-  const { username, password } = req.body;
-
-  if (username && password) {
-    if (!doesExist(username)) {
-      users.push({ username, password });
-      res.status(200).json({ message: "User successfully registered. Now you can login" });
-    } else {
-      res.status(409).json({ message: "User already exists!" });
+    const { username, password } = req.body;
+  
+    if (!username || !password) {
+      return res.status(400).json({ message: "Unable to register user." });
     }
-  } else {
-    res.status(400).json({ message: "Unable to register user." });
-  }
-});
+  
+    if (!isValid(username, password)) {
+      return res.status(400).json({ message: "Provided credentials are not valid." });
+    }
+  
+    if (doesExist(username)) {
+      return res.status(409).json({ message: "User already exists!" });
+    }
+  
+    users.push({ username, password });
+    return res.status(200).json({ message: "User successfully registered. Now you can login" });
+  });
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
