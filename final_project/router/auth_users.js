@@ -45,28 +45,48 @@ regd_users.post("/login", (req,res) => {
     }, 'access', { expiresIn: 60 });
 
     req.session.authorization = { accessToken, username };
-    res.status(200).send("User successfully logged in");
+    res.status(200).send(`User ${username} successfully logged in`);
   } else {
     res.status(208).json({message: "Invalid Login. Check username and password"});
   }
+
+  console.log(`Username ao logar: ${username}`)
 });
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   let isbn = req.params.isbn;
-  let book = books[isbn];
-  if (book) {
-    let review = req.body.reviews;
-    if (review) {
-      book["reviews"] = review;
-      books[isbn] = book;
-      res.status(200).json({message: "Review successfully updated"});
-    } else {
-      res.status(400).json({message: "No review was provided"});
-    }
-  } else {
-    res.status(401).json({message: "Unable to find the book"});
+  let username = req.session.authorization.username; // Assuming username is stored in session
+  let review = req.body.review; // Accepting review text as request query
+  console.log(`Username armazenado na variável username: ${username}`)
+
+  if (!books[isbn]) {
+    books[isbn] = {
+      reviews: {}
+    };
   }
+  
+  if (!review) {
+    res.status(400).json({message: "No review was provided"});
+    return;
+  }
+  
+  let book = books[isbn];
+  let existingReview = books[isbn].reviews[username];
+  
+  if (existingReview) {
+    // Modify existing review for the same user
+    existingReview.review = review;
+  } else {
+    // Add new review from a different user
+    book.reviews[username] = {
+      username: username,
+      reviews: review
+    };
+  }
+
+  console.log(books[isbn].reviews[username])
+  res.status(200).json({message: "Review successfully updated"});
 });
 
 regd_users.delete("/auth/review/:isbn", (req, res) => {
