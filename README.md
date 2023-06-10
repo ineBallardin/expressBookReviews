@@ -24,3 +24,15 @@
 
 # 9-gedetailsISBN.png
 ![img](https://i.imgur.com/TvLL2JL.png)
+
+# 10-gedetailsISBN.png
+![img](https://i.imgur.com/8Hub8Wx.png)
+
+# 11-gedetailsISBN.png
+![img](https://i.imgur.com/FRfAZ7u.png)
+
+# 12-gedetailsISBN.png
+![img](https://i.imgur.com/eJA4bkh.png)
+
+# 13-gedetailsISBN.png
+![img](https://i.imgur.com/6VMwYXJ.png)
